@@ -1,0 +1,44 @@
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./utils/db.js";
+import userRoute from "./routes/user.route.js";
+import companyRoute from "./routes/company.route.js";
+import jobRoute from "./routes/job.route.js";
+import applicationRoute from "./routes/application.route.js";
+
+dotenv.config();
+const app = express();
+
+// Connect to DB
+connectDB();
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cors({
+  origin: ["http://127.0.0.1:5173", "https://engineer-s-depot.vercel.app"], 
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"], 
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+);
+
+
+
+// API Routes
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/company", companyRoute);
+app.use("/api/v1/job", jobRoute);
+app.use("/api/v1/application", applicationRoute);
+
+// Default Route (For testing)
+app.get("/api/v1/", (req, res) => {
+  res.send("Backend is running on Vercel 🚀");
+});
+
+// Export for Vercel
+export default app;
